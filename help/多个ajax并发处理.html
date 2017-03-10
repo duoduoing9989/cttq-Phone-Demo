@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>多个ajax并发处理</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <style>
+    .red { color:red; }
+    </style>
+</head>
+<body>
+<div><b>多个ajax并发处理</b></div>
+<pre>
+统一待办中已使用(app_TodoList/homePage.html)请参照
+ * -----------------------------------------------------------
+ * 主要思路在ajax方法初始化时为方法定义一个Deferred
+ * 在ajax方法结束后对Deferred进行resolve，resolve可传递参数
+ * 然后通过when判断多个ajax是否都请求结束
+	var init = function(){
+	    var ajax1_D = $.Deferred();
+	    var ajax1 = function(){
+	        ajaxPost(paramJSON, paramURL, paramtTimeOut, function(perReturn1){
+	            ajax1_D.resolve(perReturn1);
+	        });
+	    };ajax1();
+	    var ajax2_D = $.Deferred();
+	    var ajax2 = function(){
+	        ajaxPost(paramJSON, paramURL, paramtTimeOut, function(perReturn2){
+	            ajax2_D.resolve(perReturn2);
+	        });
+	    };ajax2();
+	    $.when( ajax1_D, ajax2_D ).done(function ( perReturn1, perReturn2 ){
+	        console.log(perReturn1, perReturn2);
+	    });
+	};
+ * 同类型的多个ajax并发加载动画不知何时关闭可用此办法解决
+ * -----------------------------------------------------------
+</pre>
+</body>
+</html>
