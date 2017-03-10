@@ -1,0 +1,92 @@
+@font-face {
+    font-family: 'cttq';
+    src:url('cttq.eot?ojrofu');
+    src:url('cttq.eot?ojrofu#iefix') format('embedded-opentype'),
+        url('cttq.ttf?ojrofu') format('truetype'),
+        url('cttq.woff?ojrofu') format('woff'),
+        url('cttq.svg?ojrofu#cttq') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="cttq-"], [class*=" cttq-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'cttq' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    /*
+    line-height: 1;
+    */
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.cttq-call:before {
+    content: "\e900";
+}
+.cttq-badComment:before {
+    content: "\e901";
+}
+.cttq-checkedBad:before {
+    content: "\e902";
+}
+.cttq-answer:before {
+    content: "\e903";
+}
+.cttq-workSystem:before {
+    content: "\e905";
+}
+.cttq-praise:before {
+    content: "\e906";
+}
+.cttq-checkedPraise:before {
+    content: "\e907";
+}
+.cttq-add:before {
+    content: "\e908";
+}
+.cttq-lessen:before {
+    content: "\e909";
+}
+.cttq-expect:before {
+    content: "\e90a";
+}
+.cttq-remove:before {
+    content: "\e90b";
+}
+.cttq-finish:before {
+    content: "\e90c";
+}
+.cttq-noPraise:before {
+    content: "\e90d";
+}
+.cttq-likes:before {
+    content: "\e904";
+}
+.cttq-ask:before {
+    content: "\e90e";
+}
+.cttq-needHelp:before {
+    content: "\e90f";
+}
+.cttq-nav-down:before {
+    content: "\e910";
+}
+.cttq-nav-right:before {
+    content: "\e911";
+}
+.cttq-nav-left:before {
+    content: "\e912";
+}
+.cttq-satisfied:before {
+    content: "\e913";
+}
+.cttq-append:before {
+    content: "\e914";
+}
+

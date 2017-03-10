@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>工具类说明</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <style>
+    .red { color:red; }
+    </style>
+</head>
+<body>
+<div><b>工具类说明</b></div>
+<pre>
+这里是在mui基础上封装的xview框架的通用js和css
+utils.js        工具类, 与具体业务无关, 除了jQuery之外不依赖别的第三方库
+xmui.js         mui功能增强和封装
+config.js       配置项
+business.js     与业务相关的公共代码
+plugin-init.js  各种插件的初始化代码
+mainpage.js     只有主页面执行的代码, 如登录信息初始化, xview框架初始化
+xview.js        xview框架, 实现多页面的前进后退/多页面状态保持/多页面间方法调用/通过ajax加载子页面/转场动画等功能
+common.css      通用样式
+business.css    基于mui的通用样式
+
+工具类JS路径:
+&lt;script src="../assets/mui/js/mui.js"&gt;&lt;/script&gt;
+&lt;script src="../assets/libs/jquery/jquery.1.11.1.js"&gt;&lt;/script&gt;
+&lt;script src="../assets/libs/template.js"&gt;&lt;/script&gt;
+&lt;script src="../assets/libs/zhh.tools.js"&gt;&lt;/script&gt;
+&lt;script src="../assets/base/utils.js"&gt;&lt;/script&gt;
+&lt;script src="../assets/base/xmui.js"&gt;&lt;/script&gt;
+&lt;script src="../assets/base/config.js"&gt;&lt;/script&gt;
+&lt;script src="../assets/base/business.js"&gt;&lt;/script&gt;
+&lt;script src="../assets/base/plugin-init.js"&gt;&lt;/script&gt;
+
+
+ * -----------------------------------------------------------
+ * 获取当前登录人的工号/姓名
+ * Utils.cache.get("WorkCode"); // 返回当前登录人的工号, 如: 8102695
+ * Utils.cache.get("UserName"); // 返回当前登录人的姓名, 如: 王莹
+ * (这是在homepage.js的initaccount中设置的)
+ * -----------------------------
+ * 设置测试工号
+ * 在控制台执行: initaccount("8102695", false);
+ * -----------------------------
+ * 如果需要获取工号, 可以监听account-init或account-detail事件
+ * 不要在页面刚开始加载就设置一个全局变量去获取工号/姓名(如果刚切换账号, 此时有可能还是上一个用户的)
+	Utils.events.on("account-init", function(account) {
+		console.log("account-init", account);
+	});
+	Utils.events.on("account-detail", function(account, userName, userDetail) {
+		console.log("account-detail", account, userName, userDetail);
+	});
+ * -----------------------------------------------------------
+
+
+ * -----------------------------------------------------------
+ * AJAX提交插件
+ * -----------------------------------------------------------
+ * $.zajax(url, [params], [loading], callback);
+ * $.zajax(url, [params], [loading], options);
+ * $(button).zajax(url, [params], [loading], callback);
+ * $(button).zajax(url, [params], [loading], options);
+ * -----------------------------------------------------------
+ * 参数说明:
+	button: 用于防止重复提交
+	url: string|{GET:url}|{POST:url}, 如果是string, GET|POST由配置项决定: $.zajax.defaults.options.type
+	params: json, 需要提交的数据
+	loading: true|false, 是否显示正在加载
+	callback: function, 成功时的回调函数
+	options: { // 选项
+		succ: function(json), // 成功回调函数
+		fail: function(json), // 失败回调函数
+		type: "POST",
+		dataType: "json",
+		loading: true // 是否显示正在加载
+	}
+ * -----------------------------------------------------------
+ * 如果需要提交当前登录人的工号/姓名, 可以使用占位符, 插件会自动替换为实际的值
+ * 例如: var params = { currWorkCode:"{cache:WorkCode}", currUserName:"{cache:UserName}" }
+ * -----------------------------------------------------------
+ 
+
+ * -----------------------------------------------------------
+ * <span class="red">填充数据插件 new</span>
+ * $.fn.fillData(data); // 填充数据
+ * $.fn.fillData("clear"); // 清空数据
+ * $.fn.fillData("..."); // 全部填充为..., 参数为任意字符串
+ * numeral需要用到assets/libs/numeral/min/<span class="red">numeral.min.js</span>
+ * -----------------------------------------------------------
+ 	金额:&lt;span data-fill="amount"&gt;&lt;/span&gt;元
+ 	&lt;span data-fill="field:'amount',prefix:'金额:',suffix:'元',defaultValue:'0.00',format:{numeral:'0,0.00'}"&gt;&lt;/span&gt;
+ 	生日:&lt;span data-fill="field:'birthday',defaultValue:'{date}',format:{date:'yyyyMMdd'}"&gt;&lt;/span&gt;
+ 	性别:&lt;span data-fill="field:'gender',defaultValue:'UNKNOWN',format:{map:{MALE:'男',FEMALE:'女',UNKNOWN:'未知'}}"&gt;&lt;/span&gt;
+	$(document.body).fillData({ gender:'MALE', birthday:'2016-08-08', amount:888 });
+ * -----------------------------------------------------------
+ 
+ 
+ * -----------------------------------------------------------
+ * 显示消息提示框
+ * Utils.toast(message);
+ * -----------------------------------------------------------
+ * 判断返回结果是否成功
+ * Utils.succ(json); // json = { resultCode:'100', resultJson:{} }
+ * -----------------------------------------------------------
+ * 获取接口地址
+ * Utils.getBaseUrl('zhrws/ZHRWS2117');
+ * -----------------------------------------------------------
+ * 获取页面地址
+ * Utils.getViewUrl('app_Main/html/setting.html');
+ * -----------------------------------------------------------
+ * <span class="red">生成随机序列号 new</span>
+ * 用于替换appcan的channelSerialNo
+ * Utils.generateRandomCode();
+ * Utils.generateRandomCode(WorkCode);
+ * -----------------------------------------------------------
+ * <span class="red">获取字符串 new</span>
+ * Utils.getString(undefined);  =  ""
+ * Utils.getString({});  =  ""
+ * Utils.getString({xx:value});  =  ""
+ * Utils.getString(12345);  =  "12345"
+ * Utils.getString(true);  =  "true"
+ * -----------------------------------------------------------
+ * 获取数组
+ * Utils.getArray(undefined);  =  []
+ * Utils.getArray({});  =  []
+ * Utils.getArray({xx:value});  =  [{xx:value}]
+ * -----------------------------------------------------------
+ * <span class="red">滚动至指定位置 new</span>
+ * Utils.muiScrollTo(0);
+ * Utils.muiScrollTo("top");
+ * Utils.muiScrollTo("bottom");
+ * Utils.muiScrollTo($elem);
+ * -----------------------------------------------------------
+ * <span class="red">补全字符 new</span>
+ * Utils.pad(string, char, left:boolean, length); // left可省略
+ * 左侧补字符: Utils.pad(12345, '0', 10); 返回0000012345
+ * 右侧补字符: Utils.pad(12345, '0', false, 10); 返回 1234500000
+ * -----------------------------------------------------------
+ * <span class="red">字符串decode函数 new</span>
+ * Utils.decode(value, "Y", "是", "N", "否"); // 如果value=Y,返回是;value=N,返回否;value=其他值,返回undefined
+ * Utils.decode(value, "Y", "是", "N", "否", "未知"); // 如果value=Y,返回是;value=N,返回否;value=其他值,返回未知
+ * Utils.decode(value, 1, "男", 2, "女", ""); // 如果value=1,返回男;value=2,返回女;value=其他值,返回空字符串
+ * -----------------------------------------------------------
+ * 返回上一页
+ * Utils.nav.back();
+ * -----------------------------
+ * 跳转至下一页
+ * Utils.nav.next(url:string, hashParams:json, passParams:json);
+ * -----------------------------
+ * 替换当前页
+ * Utils.nav.replace(url:string, hashParams:json, passParams:json);
+ * -----------------------------
+ * 获取缓存的页面
+ * var iframe = Utils.nav.view('homepage.html');
+ * var xxx = $(iframe.document.body).find("xxx");
+ * Utils.nav.view(-n); == 上n个页面
+ * Utils.nav.view(+n); == 第n个页面
+ * -----------------------------
+ * 执行缓存页面的方法
+ * Utils.nav.invoke('homepage.html', method, argument 1, ..., argument n);
+ * Utils.nav.invoke(-n, method, argument 1, ..., argument n); // 执行上n个页面的方法
+ * Utils.nav.invoke(+n, method, argument 1, ..., argument n); // 执行第n个页面的方法
+ * -----------------------------
+ * 接收上一页面传递的参数
+ * Utils.getPassParams();
+ * @return json
+ * -----------------------------
+ * hashParams=json, 是指通过url后面传递的参数, 会自动转换为#&amp;的格式, 如: index.html#id=10001&amp;name=xxx
+ * passParams=json, 是指通过localStorage传递到下一个页面的参数, 通过Utils.getPassParams()接收
+ *     另外, 可以通过data-pass-params自动接收并填充到页面上
+ *     例如: 
+ *     Utils.nav.next(url:"detail.html", {}, { user:{id:1001,email:"name@domain.com"} });
+ *     &lt;div data-pass-params="user.email"&gt;&lt;/div&gt;
+ * -----------------------------------------------------------
+ * 将对象保存至缓存
+ * Utils.cache.set(key:string, object:string|json);
+ * @example
+ * Utils.cache.set('USER_INFO', { id:10001, name:'xxx' });
+ * -----------------------------
+ * 从缓存中读取对象
+ * Utils.cache.get(key:string)
+ * Utils.cache.get(key:string, parse:true|false)
+ * @param parse 是否解析为对象, 默认为true
+ * @example
+ * Utils.cache.get('USER_INFO'); = { id:10001, name:'xxx' }
+ * -----------------------------
+ * 从缓存中删除对象
+ * Utils.cache.del(key:string);
+ * Utils.cache.del(key:string, parse:true|false);
+ * @param parse 是否解析为对象, 默认为true
+ * @return 返回被删除的对象
+ * Utils.cache.del('USER_INFO');
+ * -----------------------------------------------------------
+ 
+ 
+ * -----------------------------------------------------------
+ * 根据页面地址获取参数对象
+ * 示例: http://xxx/x.html?name=zhh&id=100
+ * $.getPageParams() --> { name:"zhh", id:"100" }
+ * $.getPageParams("name") --> "zhh"
+ * $.getPageParams("id") --> "100"
+ * -----------------------------
+ * 根据页面hash获取参数对象
+ * 示例: http://xxx/x.html#name=zhh&id=100
+ * $.getHashParams() --> { name:"zhh", id:"100" }
+ * $.getHashParams("name") --> "zhh"
+ * $.getHashParams("id") --> "100"
+ * -----------------------------------------------------------
+
+
+ * -----------------------------------------------------------
+ * 日期转换为易识别的字符串
+ * @param showTime = 是否显示时间, 默认=false
+ * @param useJust = 是否使用'刚刚', 默认=true
+ * -----------------------------------------------------------
+ * Dates.toReadable(date:Date|string); --&gt; 刚刚/10:20/昨天/前天/10月9日/03年12月12日
+ * Dates.toReadable(date:Date|string, showTime:true, ); --&gt; 刚刚/今天10:20/昨天00:00/前天12:34/10月9日12:34/03年12月12日12:34
+ * -----------------------------------------------------------
+
+
+ * -----------------------------------------------------------
+ * 日期格式化
+ * -----------------------------------------------------------
+ * y: 表示年
+ * M：表示一年中的月份 1~12
+ * d: 表示月份中的天数 1~31
+ * H：表示一天中的小时数 0~23
+ * m: 表示小时中的分钟数 0~59
+ * s: 表示分钟中的秒数   0~59
+ * S: 表示秒中的毫秒数   0~999
+ * -----------------------------------------------------------
+ * Dates.format(new Date());
+ * Dates.format(new Date(), Dates.FORMAT.DATE);
+ * Dates.format(new Date(), Dates.FORMAT.DATETIME);
+ * Dates.format(new Date(), 'yyyy-MM-dd HH:mm:ss.SSS');
+ * -----------------------------------------------------------
+ * 解析日期
+ * Dates.parse("10-20");
+ * Dates.parse("5月6日");
+ * Dates.parse("2000-10-20");
+ * Dates.parse("2000-10-20 15:25:35");
+ * Dates.parse("2000-10-20 15:25:35.888");
+ * -----------------------------------------------------------
+ * <span class="red">获取本周第一天(星期一)和最后一天(星期天) new</span>
+ * Dates.getFirstDayOfWeek('2016-03-01');  = 2016-02-29
+ * Dates.getLastDayOfWeek ('2016-03-01');  = 2016-03-06
+ * -----------------------------------------------------------
+ * <span class="red">获取本月第一天和最后一天 new</span>
+ * Dates.getFirstDayOfMonth('2016-02-20'); = 2016-02-01
+ * Dates.getLastDayOfMonth ('2016-02-20'); = 2016-02-29
+ * -----------------------------------------------------------
+ * <span class="red">计算相对日期 new</span>
+ * Dates.calculate("2016-03-01", "-1d");  = 2016-02-29
+ * Dates.calculate("2016-03-01", "-2m");  = 2016-01-01
+ * Dates.calculate("2016-03-01", "-3y");  = 2013-03-01
+ * Dates.calculate("2016-03-01", "+2d");  = 2016-03-03
+ * Dates.calculate("2016-03-01", "-2m+3d");  = 2016-01-04
+ * -----------------------------------------------------------
+ 
+ 
+ * -----------------------------------------------------------
+ * 原生方法的封装
+ * 改进点: 之前的封装方法很复杂, 现在简单多了
+ * 之前的回调函数只能写函数名, 现在可以直接写function了
+ * 之前的回调函数不能写在iframe中, 现在可以了
+ * -----------------------------------------------------------
+ 	// 显示消息提示框
+ 	Utils.app.showToast(message);
+	// 显示正在加载提示框
+	Utils.app.showLoading(message);
+	// 关闭正在加载提示框
+	Utils.app.hideLoading();
+	// 显示对话框
+	Utils.app.showDialog(content, [title,] noCallback, okCallback); // 确定取消按钮都有
+	Utils.app.showDialog(content, [title,] true, okCallback); // 确定取消按钮都有
+	Utils.app.showDialog(content, [title,] true, false); // 只有取消按钮
+	Utils.app.showDialog(content, [title,] okCallback); // 只有确定按钮
+	Utils.app.showDialog(content, [title,]); // 只有确定按钮, 且没有回调函数
+	// 将数据保存至原生sqlite数据库
+	// @param account false=不进行账号隔离(默认), true=当前登录账号, string=指定账号
+	Utils.app.db.set(key:string, value:json)
+	Utils.app.db.set(key:string, account:true|false|string, value)
+	Utils.app.db.get(key:string, callback:function(value))
+	Utils.app.db.get(key:string, account:true|false|string, callback:function(value))
+	// 打开日期选择对话框
+	// params=json={date:"2016-08-08"}
+	Utils.app.setDate(params, function(json) {  });
+	// 打开时间选择对话框
+	// params=json={time:"10:20"}
+	Utils.app.setTime(params, function(json) {  });
+	// 获取图像并上传至服务器，需要用户选择相册、相机
+	// 如果选中了多张, 会多次回调, 回调的url已经是文件服务器地址了
+	// json = { status:"0", url:"http://...", msg:string }, status:0=成功
+	Utils.app.uploadFile({url:"/app/uploadImg"}, function(json) {});
+	// 获取图像，需要用户选择相册、相机
+	Utils.app.getImage(...);
+	// 从相机获取照片
+	Utils.app.getCamera(...);
+	// 从原生的相册或者相机选择一张照片
+	Utils.app.getPicutre(...);
+	// 设置右上角菜单
+	Utils.app.setRightMenu(params);
+	// 显示进度条
+	Utils.app.showProgress(...);
+	// 隐藏进度条
+	Utils.app.hideProgress(...);
+	// 强制全屏界面
+	Utils.app.showModelPage(...);
+	// 关闭全屏界面
+	Utils.app.closeModelPage(...);
+	// 关闭前一个页面
+	// params={"clearTask":1}
+	Utils.app.hisBack(params);
+	// 图片浏览器
+	Utils.app.imgBrowse(...);
+	// 通讯录
+	Utils.app.addressbook(...);
+	// 退出登录
+	Utils.app.logout(...);
+	// 获取网络状态
+	Utils.app.getNetworkStatus(...);
+	// 禁止刷新
+	Utils.app.forbidRefresh();
+	// 拨打电话
+	// params={cellphone:"400-182-0660"}
+	Utils.app.cellphone(params);
+ * -----------------------------------------------------------
+
+
+ * -----------------------------------------------------------
+ * 百度模板
+ * Utils.baidu.template(type:string, data:json);
+ * Utils.baidu.template(selector:string|element, type:string, data:json);    1.插入节点位置；2.模板名；3.数据源
+ * -----------------------------------------------------------
+&lt;script type="list-consult"&gt;
+&lt;# $.each(this, function(i, data) { #&gt;
+	&lt;div class="index-consult-item hm-bb-d8 hm-p-tb1 hm-pr1" data-quesCid="&lt;#=data.quesCid#&gt;"&gt;
+		&lt;#if(data.redNoticeUserState == 2){#&gt;
+		&lt;div class="hm-pos-a hm-w0-5 hm-h0-5 hm-rad-round"&gt;&lt;/div&gt;
+		&lt;#}#&gt;
+		&lt;div class="hm-lh1"&gt;
+			&lt;div class="hm-font0-95 ut-s"&gt;
+				&lt;#if(data.quesContent) {#&gt;
+				&lt;div class="hm-mb0-5 hm-lh0-1 hm-uts"&gt;&lt;#=data.quesContent#&gt;&lt;/div&gt;
+				&lt;#}#&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;div class="ub hm-lh0-75 hm-op-54"&gt;
+			&lt;div class="ub-f1 hm-font0-75"&gt;&lt;#=Dates.toReadable(data.raiserDatetime)#&gt;&lt;/div&gt;
+			&lt;div id="quesitem_status_${quesCid}" class="hm-font0-75"&gt;
+				&lt;#=STATUS[data.quesStateIt]#&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;# }); #&gt;
+&lt;/script&gt;
+ * -----------------------------------------------------------
+ 
+ 
+ * -----------------------------------------------------------
+ * 填充数据
+ * $.fn.fillData(data); // 填充数据
+ * $.fn.fillData("clear"); // 清空数据
+ * $.fn.fillData("..."); // 全部填充为..., 参数为任意字符串
+ * numeral需要用到assets/libs/numeral/min/numeral.min.js
+ * -----------------------------------------------------------
+ 	金额:<span data-fill="amount"></span>元
+ 	<span data-fill="field:'amount',prefix:'金额:',suffix:'元',defaultValue:'0.00',format:{numeral:'0,0.00'}"></span>
+ 	生日:<span data-fill="field:'birthday',defaultValue:'{date}',format:{date:'yyyyMMdd'}"></span>
+ 	性别:<span data-fill="field:'gender',defaultValue:'UNKNOWN',format:{map:{MALE:'男',FEMALE:'女',UNKNOWN:'未知'}}"></span>
+	$(xxx).fillData({ gender:'MALE', birthday:'2016-08-08', amount:888 });
+ * -----------------------------------------------------------
+
+
+ * -----------------------------------------------------------
+ * 判断数据类型
+ * isNull isUndefined
+ * isNumeric isNumber isBoolean isString isDate isRegExp isError
+ * isObject isPlainObject isEmptyObject isFunction isArray isWindow
+ * isElement isDomElement isJqueryElement
+ * -----------------------------------------------------------
+ * $.dt.isNumber("0") = false
+ * $.dt.isNumeric("0") = true
+ * $.dt.isNumeric("0xFF") = true
+ * $.dt.isObject(document) = true
+ * $.dt.isPlainObject(document) = false
+ * $.dt.isDomElement(document) = true
+ * $.dt.isJqueryElement($(document)) = true
+ * $.dt.isElement(document) = true
+ * $.dt.isElement($(document)) = true
+ * -----------------------------------------------------------
+
+
+ * -----------------------------------------------------------
+ * 字符串格式化
+ * 如: $.zhh.format("Name:{0}, Email:{1}", "zhaohuihua", "zhaohuihua@126.com")
+ * --&gt; Name:zhaohuihua, Email:zhaohuihua@126.com
+ * -----------------------------------------------------------
+ * 字符串加载JSON数据, 是字符串格式化的加强版
+示例:
+var json = {
+	id:1001, name:"Avril Lavigne", extra:{download:1888, click:1999},
+	image:[{type:"pvw",path:"1001.1.jpg"},{type:"main",path:"1001.2.jpg"}],
+	music:["Runaway", "Innocence", "Contagious"]
+};
+$.zhh.format("&lt;li&gt;{id}&lt;/li&gt;&lt;li&gt;{name}&lt;/li&gt;", json)
+--&gt; &lt;li&gt;1001&lt;/li&gt;&lt;li&gt;Avril Lavigne&lt;/li&gt;
+$.zhh.format("&lt;li&gt;{extra.click}&lt;/li&gt;&lt;li&gt;{image[1].path}&lt;/li&gt;", json)
+--&gt; &lt;li&gt;1999&lt;/li&gt;&lt;li&gt;1001.2.jpg&lt;/li&gt;
+$.zhh.format("&lt;li&gt;{music[0]}&lt;/li&gt;&lt;li&gt;{music[1]}&lt;/li&gt;&lt;li&gt;{music[2]}&lt;/li&gt;", json)
+--&gt; &lt;li&gt;Runaway&lt;/li&gt;&lt;li&gt;Innocence&lt;/li&gt;&lt;li&gt;Contagious&lt;/li&gt;
+ * -----------------------------------------------------------
+ * $.zhh.format('{{}}', "&lt;li&gt;{{id}}&lt;/li&gt;&lt;li&gt;{{name}}&lt;/li&gt;", json)
+ * $.zhh.format('&lt;##&gt;', "&lt;li&gt;&lt;#id#&gt;&lt;/li&gt;&lt;li&gt;&lt;#name#&gt;&lt;/li&gt;", json)
+ * -----------------------------------------------------------
+ 
+ 
+ * -----------------------------------------------------------
+ * 正在加载提示框
+ * 依赖样式mui.css, common.css
+ * $.zloading("show"); // 显示正在加载
+ * $.zloading("hide"); // 关闭正在加载
+ * $.zloading("正在提交，请稍候...");
+ * $.zloading(options);
+	options = {
+		show: true, // 显示
+		hide: true, // 隐藏
+		text: "", // 提示文字
+		icon: "", // 图标的内容
+	}
+  * -----------------------------------------------------------
+  
+ 
+ * -------------------------------------------------------------
+ * 照片附件插件
+ * -------------------------------------------------------------
+	&lt;div class="ln uploads do-camera" data-options="limitCount:5, imageName:'imageInfos[i].imagePath'"&gt;
+		&lt;a class="camera"&gt;&lt;/a&gt;
+	&lt;/div&gt;
+	$(".do-camera").on("change", function(e, json) {
+		// json = { total:number, url:string, index:integer } // 新增时有url, 删除时有index
+	});
+ * -------------------------------------------------------------
+ * 需要定制自己的逻辑时, 就不要用.do-camera这个样式了
+ * -------------------------------
+	&lt;div class="ln uploads edit-camera" data-options="imageName:'imageInfos[i].imagePath'"&gt;
+		&lt;a class="camera"&gt;&lt;/a&gt;
+	&lt;/div&gt;
+	$(".edit-camera").zcamera({
+		on: {
+			// json = { url:string }
+			add: function(api, json) { if (...) { api.add(json); } },
+			// json = { index:integer }
+			del: function(api, json) { if (...) { api.del(json); } }
+		}
+	});
+ * -------------------------------------------------------------
+ 
+
+ * -------------------------------------------------------------
+ * OSS上传(form.zajax()上传)
+ * -------------------------------
+	&lt;form data-options="businessType:'Public', docType:'LEAVE', docTypeNm:'休假', docIdField:'quesId'"&gt;
+		&lt;div class="ln uploads do-camera" data-options="limitCount:5, imageName:'imageInfos[i].imagePath'"&gt;
+			&lt;a class="camera"&gt;&lt;/a&gt;
+		&lt;/div&gt;
+	&lt;/form&gt;
+ * -------------------------------
+ * OSS上传(form.zupload()上传)
+ * -------------------------------
+	&lt;form class="ln uploads do-camera" data-options="limitCount:5"&gt;
+		&lt;a class="camera"&gt;&lt;/a&gt;
+	&lt;/form&gt;
+
+	$("form.do-camera").zupload({
+		data: {
+			businessType:"Public",
+			docType:"LEAVE",
+			docTypeNm:"休假",
+			docId:"x" // 休假申请的ID
+		},
+		done: function(e) {
+			// 全部上传完成
+			// 如果没有需要上传的内容,则直接回调该函数; e = { finish:int, count:int }
+			// finish = 成功完成了几个图片
+			// count = 一共有几个图片需要上传
+		},
+		process: function(e) {
+			// 进度提示
+			// e = { element:DOMElement, index:int, count:int, percent:int }
+			// count = 一共有几个图片需要上传
+			// index = 当前上传第几个图片, 从0开始
+			// percent = 当前图片上传进度, 0~100
+		},
+		error:function(e) {
+			// 上传失败
+			// e = { element:DOMElement, index:int, count:int, message:string }
+			// return true则失败后仍然继续上传下一张
+		}
+	});
+ * -------------------------------------------------------------
+ * OSS附件查询
+ * -------------------------------
+	$.zfiles("query", {
+		data: {
+			businessType:"Public", // 业务类型
+			queryMode:"1", // 查询模式:0.按创建人查询|1.按单据查询
+			createUserId:"{cache:WorkCode}", // 创建人查询条件
+			docType:"LEAVE", // 单据类型查询条件
+			docIds:[FORM_ID] // 单据ID查询条件
+		},
+		succ: function(list) {
+			if (!list || list.length == 0) {
+				$(".attachments").text("无附件");
+			} else {
+				var tpl = '&lt;img src="{url}?x-oss-process=image/resize,m_fill,h_100,w_100" data-preview-src="{url}?x-oss-process=image/quality,q_80" data-preview-group="{docId}"/&gt;';
+				var html = [];
+				$.each(list, function() {
+					html.push($.zhh.format(tpl, this));
+				});
+				$(".attachments").html(html.join(" "));
+			}
+		},
+		fail: function() {
+			$(".attachments").text("附件查询失败");
+		}
+	});
+ * -------------------------------
+ * 如果是在mui的xview框架下使用, 上传需要导入base64
+	&lt;script src="assets/libs/crypto-js/core.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/libs/crypto-js/enc-base64.js"&gt;&lt;/script&gt;
+ * 如果是在非mui框架下使用, 主页面需要导入(mainpage.js一定要在initaccount.js的后面)
+	&lt;link rel="stylesheet" href="assets/mui/css/mui.css" /&gt;
+	&lt;link rel="stylesheet" href="assets/libs/font-awesome/css/font-awesome.css" /&gt;
+	&lt;link rel="stylesheet" href="assets/base/common.css" /&gt;
+	&lt;link rel="stylesheet" href="assets/base/business.css" /&gt;
+	&lt;script src="assets/libs/jquery/jquery.1.11.1.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/libs/zhh.tools.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/xmui.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/config.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/utils.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/business.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/mainpage.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/plugin-init.js"&gt;&lt;/script&gt;
+ * 子页面需要导入
+	&lt;link rel="stylesheet" href="assets/mui/css/mui.css" /&gt;
+	&lt;link rel="stylesheet" href="assets/libs/font-awesome/css/font-awesome.css" /&gt;
+	&lt;link rel="stylesheet" href="assets/base/common.css" /&gt;
+	&lt;link rel="stylesheet" href="assets/base/business.css" /&gt;
+	&lt;script src="assets/libs/jquery/jquery.1.11.1.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/libs/template.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/mui/js/mui.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/mui/js/mui.zoom.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/mui/js/mui.previewimage.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/libs/zhh.tools.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/xmui.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/libs/aliyun/oss/aliyun-oss-sdk-4.6.2.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/libs/zfiles/aliyun-oss.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/config.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/utils.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/business.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/base/plugin-init.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/libs/crypto-js/core.js"&gt;&lt;/script&gt;
+	&lt;script src="assets/libs/crypto-js/enc-base64.js"&gt;&lt;/script&gt;
+	&lt;script&gt;
+		mui.ready(function() {
+			mui.previewImage(); // 大图预览初始化
+		});
+	&lt;/script&gt;
+ * -------------------------------------------------------------
+ 
+ 
+ * -------------------------------------------------------------
+	// 下拉刷新, 上拉加载
+	$(".mui-content").pullRefresh({ 
+		listSelector:".its-my-consults", // 列表加载到哪个dom节点
+		listField:"resultJson.listQues", // 从接口返回数据的哪个字段获取结果集
+		template:{ list:"consults-list",empty:"consults-empty" }, // 列表和空数据的模板
+		paging: "auto", // 是否分页, true|false|auto, auto根据请求参数中的占位符判断
+		limit: 10, // 每页行数
+		up: { contentnomore: "我也是有底线的" },
+		ajax: { // ajax选项, url/参数等等
+			// 我的咨询列表查询
+			url:Utils.getBaseUrl("its/mainques/listQues"),
+			data:{ userWorkCode:"{cache:WorkCode}", pageNum:"{options:page}", pagesize:"{options:limit}" }
+		},
+		callback: {
+			before: function(e, json) { // 从接口获取到数据之后的回调函数
+			},
+			after: function(e, json) { // 列表加载完之后执行的回调函数
+				// e = { succ:成功还是失败, reload:是不是重新加载, refresh:刷新还是加载, options:选项 }
+			}
+		}
+	});
+ * -------------------------------------------------------------
+	如果有复杂需求, 配置项(listSelector, listField, template, ajax)也可以写成函数, 如:
+	ajax: function() {
+		if (xxx) {
+			return {
+				url:Utils.getBaseUrl("its/mainques/xxx"),
+				data:{ userWorkCode:"{cache:WorkCode}", pageNum:"{options:page}", pagesize:"{options:limit}" }
+			};
+		} else {
+			return {
+				url:Utils.getBaseUrl("its/mainques/yyy"),
+				data:{ userWorkCode:"{cache:WorkCode}", pageNum:"{options:page}", pagesize:"{options:limit}" }
+			};
+		}
+	}
+ * -------------------------------------------------------------
+
+等等等等, 有空继续补充
+</pre>
+</body>
+</html>

@@ -1,0 +1,30 @@
+
+.hm-img{-webkit-background-size:contain !important; -moz-background-size:contain !important;background-size:contain;background-repeat:no-repeat;background-position:center;}
+
+/**图标**/
+.hm-icon-back{ background: url(../img/icon-back.png);}
+.hm-icon-back-1{ background: url(../img/icon-back-1.png);}
+
+.hm-icon-select{ background: url(../img/icon-select.png);}
+.hm-icon-select-2{ background: url(../img/icon-select-2.png);}
+.hm-icon-close-1{ background: url(../img/icon-close-1.png);}
+.hm-icon-search-1{ background: url(../img/icon-search-1.png);}
+
+.hm-icon-bulb-1{ background: url(../img/icon-bulb-1.png);}
+
+.hm-icon-add-1{background: url(../img/icon-add-1.png);}
+
+.hm-icon-minus-1{background: url(../img/icon-minus-1.png);}
+
+/**背景图片**/
+
+.hm-bgd-short-line{background: url(../img/bgd-short-line.png) center no-repeat;}
+.hm-bgd-dash-line{background: url(../img/bgd-dash-line.png) bottom repeat-x; background-size: contain;}
+
+
+.hm-img-box{ width: 4.5em; height: 5.625em; vertical-align: middle; text-align: center; line-height: 5.625em}
+.hm-img-box img{ max-width: 4.5em; max-height: 5.625em; vertical-align: middle;}
+
+.search-list .search-item:last-child{ background-image: none; border-bottom: none;}
+
+
