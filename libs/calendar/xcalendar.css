@@ -1,0 +1,249 @@
+/*------------------------------------------------------------
+// Copyright (C) 2015 正大天晴药业集团股份有限公司  版权所有。
+// 文件名：xcalendar.css
+// 文件功能描述：天晴日历css
+//
+// 创 建 人：贾韦韦
+// 创建日期：2016/03/02
+//
+// 修 改 人：赵卉华
+// 修改日期：2016-11-01
+// 修改描述：去appcan, 模块化, 浮窗调用, 简化调用方式
+//-----------------------------------------------------------*/
+
+.xcalendar-wrapper {
+    overflow: hidden;
+    position: absolute;
+    width: 100%; height: 100%;
+    top: 0; bottom: 0; left: 0; right: 0;
+}
+.xcalendar-shadow {
+    overflow: hidden;
+    position: absolute;
+    width: 100%; height: 100%;
+    top: 0; bottom: 0; left: 0; right: 0;
+    background-color: #000;
+    opacity: 0;
+    transition: opacity 500ms;
+}
+.xcalendar-wrapper.show .xcalendar-shadow {
+    opacity: 0.2;
+}
+.xcalendar-container {
+    position: absolute;
+    margin: 0 auto;
+    background-color: #eeeeee;
+    overflow-x: hidden;
+    overflow-y: auto;
+    left: 0; right: 0;
+    width: 100%; max-width: 600px;
+	bottom: -500px; height: 500px;
+    transition: bottom 500ms;
+}
+.xcalendar-wrapper.show .xcalendar-container {
+	bottom: 0 !important;
+}
+body > .xcalendar-wrapper, body > .xcalendar-wrapper .xcalendar-shadow, body > .xcalendar-wrapper .xcalendar-container {
+    position: fixed;
+    z-index: 6000;
+}
+
+.CalendarMonth {
+	margin-bottom: 10px;
+}
+
+/**
+ * 边框
+*/
+.ai-bb{
+	border-bottom: 1px solid;
+}
+/**
+ * 边框颜色黑色透明度0.16、0.26...
+*/
+.ai-bc-16{
+	border-color: rgba(0,0,0,0.16);
+}
+/**
+ * 背景色
+*/
+.ai-bgc-ff{
+	background-color: #ffffff;
+}
+.ai-bgc-f5{
+	background-color: #f5f5f5;
+}
+/**
+ * 文字色
+*/
+.ai-txc-16{
+	color: rgba(0,0,0,0.16);
+}
+.ai-txc-26{
+	color: rgba(0,0,0,0.26);
+}
+.ai-txc-36{
+	color: rgba(0,0,0,0.36);
+}
+.ai-bgc-46{
+	color: rgba(0,0,0,0.46);
+}
+.ai-txc-56{
+	color: rgba(0,0,0,0.56);
+}
+.ai-txc-66{
+	color: rgba(0,0,0,0.66);
+}
+.ai-txc-76{
+	color: rgba(0,0,0,0.76);
+}
+.ai-txc-86{
+	color: rgba(0,0,0,0.86);
+}
+.ai-txc-96{
+	color: rgba(0,0,0,0.96);
+}
+/**
+ * 填充
+*/
+.ai-pad-16{
+	padding: 0.15em 0;
+}
+.ai-pad-26{
+	padding: 0.25em 0;
+}
+.ai-pad-36{
+	padding: 0.35em 0;
+}
+.ai-pad-46{
+	padding: 0.45em 0;
+}
+.ai-pad-56{
+	padding: 0.55em 0;
+}
+.ai-pad-66{
+	padding: 0.65em 0;
+}
+.ai-pad-76{
+	padding: 0.75em 0;
+}
+.ai-pad-86{
+	padding: 0.85em 0;
+}
+.ai-pad-96{
+	padding: 0.95em 0;
+}
+.ai-pad-0-100{
+	padding: 0 1em;
+}
+/**
+ * 间距
+*/
+.ai-mt-06{
+	margin-top: 0.06em;
+}
+.ai-mt-16{
+	margin-top: 0.16em;
+}
+.ai-mt-26{
+	margin-top: 0.26em;
+}
+.ai-mt-36{
+	margin-top: 0.36em;
+}
+.ai-mt-46{
+	margin-top: 0.46em;
+}
+.ai-mt-56{
+	margin-top: 0.56em;
+}
+.ai-mt-66{
+	margin-top: 0.66em;
+}
+.ai-mt-76{
+	margin-top: 0.76em;
+}
+.ai-mt-86{
+	margin-top: 0.86em;
+}
+.ai-mt-96{
+	margin-top: 0.96em;
+}
+
+
+.ai-ubb{
+    border-bottom: 1px solid #eeeeee;
+}
+.weekTitleBox{
+
+}
+.monthTitle, .weekTitle{
+    padding: 1em 0;
+    /*color: #5677fc;*/
+}
+.monthTitle{
+    padding: 0.8em 0  0.6em 0;
+}
+.weekTitle{
+    padding: 0.6em 0 0.8em 0;
+}
+.CalendarBox{
+    position: relative;
+	font-size: 14px;
+}
+.day-box {
+    height: 3.4em;
+    /*background-color: #5677fc;*/
+}
+.CalendarDate{
+    width: 90%;
+    height: 90%;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    box-sizing:border-box;
+}
+.day-today .CalendarDate {
+	border-color:#ff6600;
+}
+.day-today.day-selected .CalendarDate {
+	border-color:#FFF;
+}
+.day-can, .day-ban{
+    width: 14.2857%;
+    background-color: #ffffff;
+}
+.weekendColor{
+    color: #ff6600;
+}
+.day-ban{
+    color: #bbbbbb;
+}
+.CalendarOnTag, .CalendarMark{
+    padding-top: 0.1em;
+    /*display: none;*/
+}
+.CalendarToday{
+    color: #5677fc;
+}
+.day-selected {
+    background-color: #5677fc;
+    color: #ffffff;
+}
+.day-selected.begin {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.day-selected.end {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.CalendarWith{
+    border-radius: 8px;
+    background-color: #d0d9ff;
+}
+.day-can .festivalColor {
+    color: #5677fc;
+}
+.day-selected .festivalColor{
+    color: #ffffff;
+}

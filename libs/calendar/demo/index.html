@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>日历</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="../../../appcan/css/ui-box.css" />
+    <link rel="stylesheet" href="../../../appcan/css/my-style.css" />
+    <link rel="stylesheet" href="../../calendar/xcalendar.css" />
+    <style type="text/css">
+    button { font-size:14px; padding:5px; }
+    </style>
+</head>
+<body>
+	<div><button name="select">选择日期</button>&nbsp;<span class="selected-date"></span></div>
+	<div>&nbsp;</div>
+	<div><button name="date-range">日期范围</button>&nbsp;<span class="date-range display-none"><span class="begin-date"></span>&nbsp;至&nbsp;<span class="end-date"></span></span></div>
+	<div>&nbsp;</div>
+<pre>
+开发指南:
+在父页面导入css和js, 参考app_NTBDealtWith/html/iT/iT_handle.html
+    &lt;link rel="stylesheet" href="../../../assets/appcan/css/ui-box.css" /&gt;
+    &lt;link rel="stylesheet" href="../../../assets/appcan/css/my-style.css" /&gt;
+    &lt;link rel="stylesheet" href="../../../assets/libs/calendar/xcalendar.css" /&gt;
+    &lt;script src="../../../assets/libs/jquery/jquery.1.11.1.js"&gt;&lt;/script&gt;
+    &lt;script src="../../../assets/libs/zhh.tools.js"&gt;&lt;/script&gt;
+    &lt;script src="../../../assets/libs/calendar/xcalendar.js"&gt;&lt;/script&gt;
+    &lt;script src="../../../assets/libs/calendar/LunarCalendar.js"&gt;&lt;/script&gt;
+在子页面导入调用, 参考app_NTBDealtWith/html/iT/iT_handle_Content.html
+    window.parent.$.xcalendar({ range:true, callback:callback });
+选项说明:
+    options = { // 全部非必填
+        range:boolean, // 是否允许选择日期范围(如果=false,只能选择一个日期;如果=true,则允许选择开始和结束日期)
+        minDate:%date%, // 允许选择的最小日期
+        maxDate:%date%, // 允许选择的最大日期
+        beginDate:%date%, // 初始打开时选中的开始日期
+        endDate:%date%, // 初始打开时选中的结束日期, 如果range=false, 该参数无效
+        callback:function(e), // 回调函数, e={ cancel:boolean, changed:boolean, beginDate:Date, endDate:Date }, 如果range=false, 则beginDate和endDate的日期部分相同
+        bindEvent:{ click:"tap" } // 绑定的click事件的名称
+    }
+    %date%=int|string|Date, int=根据当前日期计算的相对天数(+30/-30), string="-3d"/"-2m"/"+1y"之类的相对日期(string<span style='color:red'>暂未实现</span>)
+</pre>
+</body>
+<script src="../../jquery/jquery.1.11.1.js"></script>
+<script src="../../zhh.tools.js"></script>
+<script src="../../calendar/xcalendar.js"></script>
+<script src="../../calendar/LunarCalendar.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var range = {};
+		var selected = null;
+		$("button[name=date-range]").click(function() {
+			var callback = function(e) { // e = { changed:boolean, beginDate:Date, endDate:Date }
+				if (!e.changed) { return; }
+				range = e;
+				$(".date-range").show();
+				$(".begin-date").text(Dates.format(e.beginDate, Dates.FORMAT.DATE));
+				$(".end-date").text(Dates.format(e.endDate, Dates.FORMAT.DATE));
+			};
+			$.xcalendar({ range:true, beginDate:range.beginDate, endDate:range.endDate, minDate:-365, maxDate:+365, callback:callback });
+		});
+		$("button[name=select]").click(function() {
+			var callback = function(e) { // e = { changed:boolean, beginDate:Date, endDate:Date }
+				if (!e.changed) { return; }
+				selected = e.beginDate;
+				$(".selected-date").text(Dates.format(e.beginDate, Dates.FORMAT.DATE));
+			};
+			$.xcalendar({ beginDate:selected, endDate:selected, callback:callback });
+		});
+	});
+</script>
+</html>

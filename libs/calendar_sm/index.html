@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html manifest="cache.manifest">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>测试</title>
+	<link href="../img/icon/favicon.ico" rel="shortcut icon" />
+
+	<link rel="stylesheet" href="../../mui/css/mui.css" />
+	<link rel="stylesheet" href="../font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" href="../../base/common.css" />
+	<link rel="stylesheet" href="../../base/business.css" />
+
+	<link href="../../appcan/css/appcan.min.css" rel="stylesheet">
+    <link href="../../cttqAI/css/cttqAI.css" rel="stylesheet">
+    <link href="css/calendar_Sm.css" rel="stylesheet">
+    <link href="css/calendar_Helper.css" rel="stylesheet">
+    <style type="text/css">
+		p{
+			margin: 0;
+			color: #333;
+		}
+		.mui-content{
+			background-color: #fff;
+		}
+		.inputDate{
+			height: 3em;
+			border: 1px solid #333333;
+			margin: 1em;
+		}
+		.selectedDateRange{
+			height: 3em;
+			border: 1px solid #333333;
+			margin: 1em;
+		}
+		.selectedDateRange input{
+			border: none;
+			margin: 0;
+			padding: 0 0.9375em;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title" data-open-popover="target:'.top-center-menu',follow:false,cls:'mui-popover-opened'">日期控件</h1>
+	</header>
+	<div class="mui-content mui-scroll-wrapper">
+		<div class="ub ub-ver ub-f1 mui-scroll">
+			<div class="ub ub-ac ub-pc inputDate selectedDate">
+				<span>请选择日期</span>
+				<input type="text" value="" />
+			</div>
+			<div class="ub ub-ac ub-pc selectedDateRange">
+				<input type="text" class="ub ub-f1" placeholder="请选择日期段" value="" />
+			</div>
+			<li class="item mui-table-view-cell">
+				<p>/**</p>
+				<p>* calendar方法options描述：</p>
+				<p>* values&nbsp;&nbsp;&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;初始化打开后默认选中的时间。格式是value: ['2012-06-18']</p>
+				<p>* multiple&nbsp;&nbsp;&nbsp;&nbsp;true/false&nbsp;&nbsp;&nbsp;&nbsp;默认为false，是否为选择日期范围</p>
+				<p>* inputReadOnly&nbsp;&nbsp;&nbsp;&nbsp;true/false&nbsp;&nbsp;&nbsp;&nbsp;是否在input上增加一个 readonly 属性使用户无法自己输入</p>
+				<p>* minDate&nbsp;&nbsp;&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;最小可选日期，比如 2015-06-01</p>
+				<p>* maxDate&nbsp;&nbsp;&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;最大可选日期，比如 2015-08-01</p>
+				<p>* onChange&nbsp;&nbsp;&nbsp;&nbsp;function(p, values, displayValues){}    当用户选择日期时触发</p>
+				<p>* onOpen&nbsp;&nbsp;&nbsp;&nbsp;function(p){}&nbsp;&nbsp;&nbsp;&nbsp;日历弹层打开时触发</p>
+				<p>* onClose&nbsp;&nbsp;&nbsp;&nbsp;function(p){}&nbsp;&nbsp;&nbsp;&nbsp;日历弹层关闭时触发</p>
+				<p>* btnShow&nbsp;&nbsp;&nbsp;&nbsp;true/false&nbsp;&nbsp;&nbsp;&nbsp;取消、完成按钮是否显示</p>
+				<p>*/</p>
+			</li>
+		</div>
+	</div>
+</body>
+<script src="../../mui/js/mui.js"></script>
+<script src="../jquery/jquery.1.11.1.js"></script>
+<script src="../zhh.tools.js"></script>
+<script src="../../base/utils.js"></script>
+<script src="../../base/xmui.js"></script>
+<script src="../../base/config.js"></script>
+<script src="../../base/business.js"></script>
+
+<script src="../../cttqAI/js/cttqAI.js"></script>
+<script src="js/calendar_Sm.js"></script>
+<script src="js/calendar_Lunar.js"></script>
+<script type="text/javascript">
+	/**
+	* calendar方法options描述：
+	* values 			undefined			初始化打开后默认选中的时间。格式是value: ['2012-06-18']
+	* multiple 			true/false   		默认为false，是否为选择日期范围
+	* inputReadOnly    	true/false    		是否在input上增加一个 readonly 属性使用户无法自己输入
+	* minDate  			undefined   		最小可选日期，比如 2015-06-01
+	* maxDate  			undefined   		最大可选日期，比如 2015-08-01
+	* onChange 			function(p, values, displayValues){}    当用户选择日期时触发
+	* onOpen   			function(p){}   	日历弹层打开时触发
+	* onClose  			function(p){}   	日历弹层关闭时触发
+	* btnShow  			true/false			取消、完成按钮是否显示 
+	*/
+	$(".selectedDate input").calendar({
+	    onChange: function(p, values, displayValues){
+	        console.log('日历返回值：',p, values, displayValues);
+	        alert(displayValues[0]);
+	        // p.input.val(values[0]);
+	        // p.input.prev().html(displayValues[0]);
+	    },
+	    onOpen: function(p){
+	        cttqAI_Backdrop_Show(0.2);
+	    },
+	    onClose: function(p){
+	        cttqAI_Backdrop_Hide();
+	    },
+	    btnShow: false
+	});
+	$(".selectedDateRange input").calendar({
+	    multiple: true,
+	    onChange: function(p, values, displayValues){
+	        console.log('日历返回值：',p, values, displayValues);
+	        alert(displayValues[0]);
+	        alert(displayValues[1]);
+	        // p.input.val(values[0]);
+	        // p.input.prev().html(''+displayValues[0]+' ~ '+displayValues[1]+'');
+	    },
+	    onOpen: function(p){
+	        cttqAI_Backdrop_Show(0.2);
+	    },
+	    onClose: function(p){
+	        cttqAI_Backdrop_Hide();
+	    }
+	});
+</script>
+</html>
